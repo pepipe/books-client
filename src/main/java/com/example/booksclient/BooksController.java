@@ -7,7 +7,7 @@ import javafx.scene.control.ListView;
 import java.util.List;
 
 
-public class HelloController {
+public class BooksController {
     @FXML
     private Label welcomeText;
 
