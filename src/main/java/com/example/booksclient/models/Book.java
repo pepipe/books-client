@@ -12,4 +12,16 @@ public class Book {
     public String getTitle(){
         return volumeInfo.title;
     }
+
+    public String getDescription(){
+        return volumeInfo.description;
+    }
+
+    public String getSmallThumbnail(){
+        return volumeInfo.imageLinks.smallThumbnail;
+    }
+
+    public String getThumbnail(){
+        return volumeInfo.imageLinks.thumbnail;
+    }
 }

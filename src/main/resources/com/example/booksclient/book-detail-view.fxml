@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Button?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.booksclient.BookDetailController" spacing="10">
+    <ImageView fx:id="bookImage" fitWidth="200" fitHeight="300"/>
+    <Label fx:id="bookTitle" text="Title"/>
+    <Label fx:id="bookDescription" text="Description"/>
+    <Button text="Back" onAction="#goBack"/>
+</VBox>

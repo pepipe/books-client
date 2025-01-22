@@ -13,8 +13,8 @@ public class BooksParser {
         throw new IllegalStateException("Utility class");
     }
 
-    public static List<String> parseBooksJson(String json) {
-        List<String> bookTitles = new ArrayList<>();
+    public static List<Book> parseBooksJson(String json) {
+        List<Book> books = new ArrayList<>();
         Gson gson = new Gson();
 
         try {
@@ -22,19 +22,13 @@ public class BooksParser {
             GoogleBooksResponse response = gson.fromJson(json, GoogleBooksResponse.class);
 
             if (response != null && response.hasItems()) {
-                // For each book item, collect the title
-                for (Book book : response.getItems()) {
-                    var title = book.getTitle();
-                    if (title != null && !title.isEmpty()) {
-                        bookTitles.add(title);
-                    }
-                }
+                books.addAll(response.getItems());
             }
         } catch (Exception e) {
             // You can log or handle JSON parsing exceptions here
             e.printStackTrace();
         }
 
-        return bookTitles;
+        return books;
     }
 }
