@@ -74,11 +74,11 @@ public class BooksController {
 
     private void openDetailsView(Book book) {
         try {
-            FXMLLoader loader = new FXMLLoader(BooksApplication.class.getResource("book-detail-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(BooksApplication.class.getResource("book-details-view.fxml"));
             Parent root = loader.load();
 
             // Pass book data to the details controller
-            BookDetailController detailsController = loader.getController();
+            BookDetailsController detailsController = loader.getController();
             detailsController.setBook(book);
             detailsController.setPreviousScene(booksScroll.getScene().getRoot());
 
