@@ -35,6 +35,8 @@ public class BookDetailController {
     @FXML
     private void goBack() {
         Stage stage = (Stage) bookImage.getScene().getWindow();
-        stage.setScene(new Scene(previousScene));
+        Scene scene = bookImage.getScene();
+        scene.setRoot(previousScene);
+        stage.setScene(scene);
     }
 }

@@ -84,7 +84,9 @@ public class BooksController {
 
             // Switch scenes
             Stage stage = (Stage) booksScroll.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            Scene scene = booksScroll.getScene();
+            scene.setRoot(root);
+            stage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
         }
