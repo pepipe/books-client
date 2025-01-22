@@ -60,7 +60,7 @@ public class BooksController {
             bookBox.getChildren().addAll(thumbnail, bookTitle);
 
             // Wrap in a button or add a click listener
-            bookBox.setOnMouseClicked(event -> openDetailsView(book));
+            bookBox.setOnMouseClicked(_ -> openDetailsView(book));
 
             // Add to grid
             int column = i % columns;
