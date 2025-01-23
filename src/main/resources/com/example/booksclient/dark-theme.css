@@ -1,0 +1,86 @@
+﻿.root {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: #a7a7a7;
+}
+
+.label {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e8e8e8;
+}
+
+.button {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #555555;
+    -fx-border-width: 1px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-padding: 10 20;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.button:hover {
+    -fx-background-color: #505356;
+    -fx-border-color: #777777;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 5, 0, 0, 1);
+}
+
+.button:pressed {
+    -fx-background-color: #2b2d2f;
+    -fx-border-color: #444444;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+    -fx-effect: innershadow(three-pass-box, rgba(0, 0, 0, 0.7), 4, 0, 0, 0);
+}
+
+.button:disabled {
+    -fx-background-color: #2c2f31;
+    -fx-text-fill: #888888;
+    -fx-border-color: #444444;
+    -fx-opacity: 0.6;
+    -fx-effect: none;
+}
+
+.button:focused {
+    -fx-border-color: #0099e5;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, #0099e5, 10, 0.5, 0, 0);
+}
+
+.button {
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.text-field {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: #e8e8e8;
+    -fx-border-color: #555555;
+}
+
+.text-area {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: #e8e8e8;
+    -fx-border-color: #555555;
+}
+
+#booksScroll {
+    -fx-background-color: #2b2b2b;
+}
+
+#booksGrid {
+    -fx-background-color: #2b2b2b;
+}
+
+#bookDetails {
+    -fx-background-color: #2b2b2b;
+}
+
+#bookTitle, #bookDescription {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: #e8e8e8;
+    -fx-padding: 10;
+    -fx-border-color: #555555;
+    -fx-border-radius: 4px;
+}
