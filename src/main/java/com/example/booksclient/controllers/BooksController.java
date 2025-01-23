@@ -44,15 +44,22 @@ public class BooksController {
 
     @FXML
     public void initialize() {
-        String booksJson = GoogleBooksService.fetchBooks("iOS", 0, 20);
-        List<Book> books = parseBooksJson(booksJson);
-        populateBooksGrid(books);
+        loadBooks();
     }
 
     @FXML
     private void handleToggleFavorites() {
         favoritesOn = !favoritesOn;
         booksGrid.getChildren().clear();
+        loadBooks();
+    }
+
+    private List<Book> parseBooksJson(String json) {
+
+        return BooksParser.parseBooksJson(json);
+    }
+
+    private void loadBooks() {
         if (favoritesOn) {
             toggleFavorites.setText("Favorites On");
             List<String> favoritesBooks = GoogleBooksService.getFavoriteBooks();
@@ -64,14 +71,12 @@ public class BooksController {
             List<Book> books = parseBooksJson(booksJson);
             populateBooksGrid(books);
         }
-
     }
 
-    private List<Book> parseBooksJson(String json) {
-
-        return BooksParser.parseBooksJson(json);
+    private void refreshBooksGrid() {
+        booksGrid.getChildren().clear();
+        loadBooks();
     }
-
 
     private void populateBooksGrid(List<Book> books) {
         int columns = 2; // Two books per row
@@ -117,6 +122,7 @@ public class BooksController {
             detailsController.setHostServices(hostServices);
             detailsController.setBook(book);
             detailsController.setPreviousScene(booksScroll.getScene().getRoot());
+            detailsController.setRefreshPreviousSceneCallback(this::refreshBooksGrid);
 
             // Switch scenes
             Stage stage = (Stage) booksScroll.getScene().getWindow();

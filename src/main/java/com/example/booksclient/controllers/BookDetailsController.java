@@ -38,6 +38,7 @@ public class BookDetailsController {
     private boolean isFavorite;
     private String bookId;
     private String bookJson;
+    private Runnable refreshPreviousSceneCallback;
 
     public void setBook(Book book) {
         bookId = book.getId();
@@ -68,12 +69,15 @@ public class BookDetailsController {
         this.hostServices = hostServices;
     }
 
+    public void setRefreshPreviousSceneCallback(Runnable callback) {
+        this.refreshPreviousSceneCallback = callback;
+    }
 
     @FXML
-    private void favoriteBook(){
+    private void favoriteBook() {
         if (isFavorite) {
             GoogleBooksService.removeFromFavorites(bookId);
-        }else{
+        } else {
             GoogleBooksService.addToFavorites(bookId, bookJson);
         }
         isFavorite = !isFavorite;
@@ -87,6 +91,10 @@ public class BookDetailsController {
 
     @FXML
     private void goBack() {
+        if (refreshPreviousSceneCallback != null) {
+            refreshPreviousSceneCallback.run();
+        }
+
         Stage stage = (Stage) bookImage.getScene().getWindow();
         Scene scene = bookImage.getScene();
         scene.setRoot(previousScene);
