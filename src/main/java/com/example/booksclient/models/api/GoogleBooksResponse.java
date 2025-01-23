@@ -1,15 +1,15 @@
-package com.example.booksclient.models;
+package com.example.booksclient.models.api;
 
 import java.util.List;
 
 public class GoogleBooksResponse {
-    List<Book> items;
+    List<BookResponse> items;
 
     public Boolean hasItems(){
         return items != null && !items.isEmpty();
     }
 
-    public List<Book> getItems() {
+    public List<BookResponse> getItems() {
         return items;
     }
 }

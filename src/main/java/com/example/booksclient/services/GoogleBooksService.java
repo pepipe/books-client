@@ -1,9 +1,9 @@
-package com.example.booksclient;
+package com.example.booksclient.services;
 
 import java.util.List;
 
-public class BooksSDK {
-    private BooksSDK() {
+public class GoogleBooksService {
+    private GoogleBooksService() {
         throw new IllegalStateException("Utility class");
     }
 

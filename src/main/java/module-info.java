@@ -8,7 +8,9 @@ module com.example.booksclient {
 
     requires com.google.gson;
 
-    opens com.example.booksclient.models to com.google.gson;
     exports com.example.booksclient;
     opens com.example.booksclient to com.google.gson, javafx.fxml;
+    opens com.example.booksclient.models.api to com.google.gson;
+    exports com.example.booksclient.services;
+    opens com.example.booksclient.services to com.google.gson, javafx.fxml;
 }

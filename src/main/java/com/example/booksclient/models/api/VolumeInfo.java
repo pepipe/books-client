@@ -1,4 +1,4 @@
-package com.example.booksclient.models;
+package com.example.booksclient.models.api;
 
 import java.util.List;
 
@@ -6,6 +6,5 @@ public class VolumeInfo {
     String title;
     String description;
     List<String> authors;
-    String publisher;
     ImageLinks imageLinks;
 }

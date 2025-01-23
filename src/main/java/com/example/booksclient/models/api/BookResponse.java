@@ -1,6 +1,6 @@
-package com.example.booksclient.models;
+package com.example.booksclient.models.api;
 
-public class Book {
+public class BookResponse {
     String id;
     VolumeInfo volumeInfo;
     SaleInfo saleInfo;
@@ -13,6 +13,10 @@ public class Book {
         return volumeInfo.title;
     }
 
+    public String getAuthors(){
+        return volumeInfo.authors.toString();
+    }
+
     public String getDescription(){
         return volumeInfo.description;
     }
@@ -23,5 +27,9 @@ public class Book {
 
     public String getThumbnail(){
         return volumeInfo.imageLinks.thumbnail;
+    }
+
+    public String getBuyLink(){
+        return saleInfo.buyLink;
     }
 }

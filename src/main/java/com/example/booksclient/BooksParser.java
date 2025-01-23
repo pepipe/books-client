@@ -1,7 +1,7 @@
 package com.example.booksclient;
 
-import com.example.booksclient.models.Book;
-import com.example.booksclient.models.GoogleBooksResponse;
+import com.example.booksclient.models.api.BookResponse;
+import com.example.booksclient.models.api.GoogleBooksResponse;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -13,8 +13,8 @@ public class BooksParser {
         throw new IllegalStateException("Utility class");
     }
 
-    public static List<Book> parseBooksJson(String json) {
-        List<Book> books = new ArrayList<>();
+    public static List<BookResponse> parseBooksJson(String json) {
+        List<BookResponse> books = new ArrayList<>();
         Gson gson = new Gson();
 
         try {

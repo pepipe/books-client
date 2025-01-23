@@ -1,4 +1,4 @@
-package com.example.booksclient.models;
+package com.example.booksclient.models.api;
 
 public class ImageLinks {
     String smallThumbnail;

@@ -12,6 +12,9 @@ public class BooksApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BooksApplication.class.getResource("books-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+        BooksController controller = fxmlLoader.getController();
+        controller.setHostServices(getHostServices());
+        scene.getStylesheets().add(BooksApplication.class.getResource("dark-theme.css").toExternalForm());
         stage.setTitle("Google Books");
         stage.setScene(scene);
         stage.show();

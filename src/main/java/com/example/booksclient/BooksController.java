@@ -1,11 +1,14 @@
 package com.example.booksclient;
 
-import com.example.booksclient.models.Book;
+import com.example.booksclient.models.api.BookResponse;
 
+import com.example.booksclient.services.GoogleBooksService;
+import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -27,23 +30,43 @@ public class BooksController {
     private GridPane booksGrid;
 
     @FXML
+    private Button toggleFavorites;
+
+    public void setHostServices(HostServices get){
+        this.hostServices = get;
+    }
+    private HostServices hostServices;
+
+    private boolean favoritesOn = false;
+
+    @FXML
     public void initialize() {
-        String booksJson = BooksSDK.fetchBooks("iOS", 0, 20);
-        List<Book> books = parseBooksJson(booksJson); // Parse JSON string to list of books
+        String booksJson = GoogleBooksService.fetchBooks("iOS", 0, 20);
+        List<BookResponse> books = parseBooksJson(booksJson); // Parse JSON string to list of books
         populateBooksGrid(books);
     }
 
-    private List<Book> parseBooksJson(String json) {
+    @FXML
+    private void handleToggleFavorites() {
+        favoritesOn = !favoritesOn;
+        if (favoritesOn) {
+            toggleFavorites.setText("Favorites On");
+        } else {
+            toggleFavorites.setText("Favorites Off");
+        }
+    }
+
+    private List<BookResponse> parseBooksJson(String json) {
 
         return BooksParser.parseBooksJson(json);
     }
 
-    private void populateBooksGrid(List<Book> books) {
+    private void populateBooksGrid(List<BookResponse> books) {
         int columns = 2; // Two books per row
         int row = 0;
 
         for (int i = 0; i < books.size(); i++) {
-            Book book = books.get(i);
+            BookResponse book = books.get(i);
             String title = book.getTitle();
             String thumbnailUrl = book.getSmallThumbnail();
 
@@ -72,13 +95,14 @@ public class BooksController {
         }
     }
 
-    private void openDetailsView(Book book) {
+    private void openDetailsView(BookResponse book) {
         try {
             FXMLLoader loader = new FXMLLoader(BooksApplication.class.getResource("book-details-view.fxml"));
             Parent root = loader.load();
 
             // Pass book data to the details controller
             BookDetailsController detailsController = loader.getController();
+            detailsController.setHostServices(hostServices);
             detailsController.setBook(book);
             detailsController.setPreviousScene(booksScroll.getScene().getRoot());
 

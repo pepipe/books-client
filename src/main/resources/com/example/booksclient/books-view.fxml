@@ -3,19 +3,30 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.ScrollPane?>
 
-<ScrollPane xmlns="http://javafx.com/javafx"  xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.booksclient.BooksController"
-            fx:id="booksScroll"
-            fitToWidth="true"
-            hbarPolicy="NEVER"
-            vbarPolicy="AS_NEEDED">
-    <content>
-        <GridPane fx:id="booksGrid"
-                  hgap="10" vgap="10" alignment="CENTER">
-            <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-            </padding>
-            <!-- books will be added dynamically -->
-        </GridPane>
-    </content>
-</ScrollPane>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.booksclient.BooksController">
+
+    <Button fx:id="toggleFavorites"
+            text="Favorites Off"
+            onAction="#handleToggleFavorites"/>
+
+    <!-- ScrollPane with books -->
+    <ScrollPane fx:id="booksScroll"
+                fitToWidth="true"
+                hbarPolicy="NEVER"
+                vbarPolicy="AS_NEEDED">
+        <content>
+            <GridPane fx:id="booksGrid"
+                      hgap="10" vgap="10"
+                      alignment="CENTER">
+                <padding>
+                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                </padding>
+                <!-- books dynamically added here -->
+            </GridPane>
+        </content>
+    </ScrollPane>
+</VBox>

@@ -4,9 +4,16 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.control.Button?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.booksclient.BookDetailsController" spacing="10">
-    <ImageView fx:id="bookImage" fitWidth="200" fitHeight="300"/>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.booksclient.BookDetailsController"
+      fx:id="bookDetails"
+      alignment="CENTER"
+      spacing="10">
     <Label fx:id="bookTitle" text="Title"/>
-    <Label fx:id="bookDescription" text="Description"/>
+    <ImageView fx:id="bookImage" fitWidth="200" fitHeight="300"/>
+    <Label fx:id="bookAuthors"/>
+    <Label fx:id="bookDescription"/>
+    <Button fx:id="bookFavorite" onAction="#favoriteBook"/>
+    <Button fx:id="bookBuy" text="Buy Book" onAction="#buyBook"/>
     <Button text="Back" onAction="#goBack"/>
 </VBox>
