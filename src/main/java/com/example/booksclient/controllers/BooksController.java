@@ -7,12 +7,14 @@ import com.example.booksclient.services.GoogleBooksService;
 import com.example.booksclient.utils.FavoriteBooksHelper;
 
 import javafx.application.HostServices;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -35,12 +37,16 @@ public class BooksController {
     @FXML
     private Button toggleFavorites;
 
+    @FXML
+    private ProgressIndicator loadingIndicator;
+
     public void setHostServices(HostServices get){
         this.hostServices = get;
     }
     private HostServices hostServices;
 
     private boolean favoritesOn = false;
+
 
     @FXML
     public void initialize() {
@@ -60,20 +66,50 @@ public class BooksController {
     }
 
     private void loadBooks() {
+        Task<String> fetchBooksTask;
+        loadingIndicator.setVisible(true);
+
         if (favoritesOn) {
             toggleFavorites.setText("Favorites On");
-            List<String> favoritesBooks = GoogleBooksService.getFavoriteBooks();
-            String booksJson = FavoriteBooksHelper.combineJsonStrings(favoritesBooks);
-            populateBooksGrid(parseBooksJson(booksJson));
+            fetchBooksTask = new Task<>() {
+                @Override
+                protected String call() throws Exception {
+                    List<String> favoritesBooks = GoogleBooksService.getFavoriteBooks();
+                    return FavoriteBooksHelper.combineJsonStrings(favoritesBooks);
+                }
+            };
         } else {
             toggleFavorites.setText("Favorites Off");
-            String booksJson = GoogleBooksService.fetchBooks("iOS", 0, 20);
+            fetchBooksTask = new Task<>() {
+                @Override
+                protected String call() throws Exception {
+                    // This runs in a background thread
+                    return GoogleBooksService.fetchBooks("iOS", 0, 20);
+                }
+            };
+        }
+
+        fetchBooksTask.setOnSucceeded(event -> {
+            loadingIndicator.setVisible(false);
+            String booksJson = fetchBooksTask.getValue();
             List<Book> books = parseBooksJson(booksJson);
             populateBooksGrid(books);
-        }
+        });
+
+        fetchBooksTask.setOnFailed(event -> {
+            loadingIndicator.setVisible(false);
+            Throwable throwable = fetchBooksTask.getException();
+            System.err.println("Error fetching books: " + throwable.getMessage());
+        });
+
+        // Run the Task in a separate thread
+        Thread thread = new Thread(fetchBooksTask);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     private void refreshBooksGrid() {
+        if(!favoritesOn) return; //only refresh if we have the favorites filter, if not we want to keep the previous data
         booksGrid.getChildren().clear();
         loadBooks();
     }
