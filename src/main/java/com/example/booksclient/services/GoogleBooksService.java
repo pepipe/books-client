@@ -16,11 +16,6 @@ public class GoogleBooksService {
         }
     }
 
-    public interface FetchBooksCallback {
-        void onResult(String resultJson);
-    }
-
-    public static native void fetchBooksAsync(FetchBooksCallback callback, String query, int startIndex, int maxResults);
     public static native String fetchBooks(String query, int startIndex, int maxResults);
     public static native void addToFavorites(String bookId, String bookJson);
     public static native void removeFromFavorites(String bookId);

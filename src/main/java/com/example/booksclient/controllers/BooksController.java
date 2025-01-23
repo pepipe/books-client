@@ -44,17 +44,9 @@ public class BooksController {
 
     @FXML
     public void initialize() {
-        GoogleBooksService.FetchBooksCallback callback = new GoogleBooksService.FetchBooksCallback() {
-            @Override
-            public void onResult(String booksJson){
-                List<Book> books = parseBooksJson(booksJson);
-                populateBooksGrid(books);
-            }
-        };
-        GoogleBooksService.fetchBooksAsync(callback, "iOS", 0, 20);
-        //String booksJson = GoogleBooksService.fetchBooks("iOS", 0, 20);
-        //List<Book> books = parseBooksJson(booksJson);
-        //populateBooksGrid(books);
+        String booksJson = GoogleBooksService.fetchBooks("iOS", 0, 20);
+        List<Book> books = parseBooksJson(booksJson);
+        populateBooksGrid(books);
     }
 
     @FXML
