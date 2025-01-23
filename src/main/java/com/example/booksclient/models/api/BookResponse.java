@@ -10,11 +10,12 @@ public class BookResponse {
     }
 
     public String getTitle(){
+        if(volumeInfo == null) return "";
         return volumeInfo.title;
     }
 
     public String getAuthors(){
-        if(volumeInfo.authors == null) return "";
+        if(volumeInfo == null || volumeInfo.authors == null) return "";
         return volumeInfo.authors.toString();
     }
 
@@ -23,14 +24,17 @@ public class BookResponse {
     }
 
     public String getSmallThumbnail(){
+        if(volumeInfo == null || volumeInfo.imageLinks == null) return "";
         return volumeInfo.imageLinks.smallThumbnail;
     }
 
     public String getThumbnail(){
+        if(volumeInfo == null || volumeInfo.imageLinks == null) return "";
         return volumeInfo.imageLinks.thumbnail;
     }
 
     public String getBuyLink(){
+        if(saleInfo == null) return "";
         return saleInfo.buyLink;
     }
 }

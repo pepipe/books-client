@@ -16,6 +16,9 @@ public class BooksParser {
     }
 
     public static List<Book> parseBooksJson(String json) {
+        if( json == null || json.isEmpty()) {
+            return new ArrayList<>();
+        }
         List<Book> books = new ArrayList<>();
         Gson gson = new Gson();
 
@@ -32,8 +35,7 @@ public class BooksParser {
                 }
             }
         } catch (Exception e) {
-            // You can log or handle JSON parsing exceptions here
-            e.printStackTrace();
+            System.err.println("Could not parse json: " + e.getMessage());
         }
 
         return books;
