@@ -1,4 +1,4 @@
-package com.example.booksclient;
+package com.example.booksclient.controllers;
 
 import com.example.booksclient.models.domain.Book;
 import com.example.booksclient.services.GoogleBooksService;
@@ -35,8 +35,13 @@ public class BookDetailsController {
     private HostServices hostServices;
     private Parent previousScene;
     private String buyLink;
+    private boolean isFavorite;
+    private String bookId;
+    private String bookJson;
 
     public void setBook(Book book) {
+        bookId = book.getId();
+        bookJson = book.getBookJson();
         bookImage.setImage(new Image(book.getImageUrl()));
         bookTitle.setText(book.getTitle());
         bookAuthors.setText("Authors: " + book.getAuthors());
@@ -46,9 +51,8 @@ public class BookDetailsController {
         } else {
             bookDescription.setText("No description available");
         }
-        var isFavorite = GoogleBooksService.isFavorite(book.getId());
-        var favoriteText = isFavorite ? "Unfavorite Book" : "Favorite Book";
-        bookFavorite.setText(favoriteText);
+        isFavorite = GoogleBooksService.isFavorite(book.getId());
+        setFavoriteLabelText();
         buyLink = book.getBuyUrl();
         if (buyLink == null || buyLink.isEmpty()) {
             bookBuy.setText("No buy options available");
@@ -67,7 +71,13 @@ public class BookDetailsController {
 
     @FXML
     private void favoriteBook(){
-
+        if (isFavorite) {
+            GoogleBooksService.removeFromFavorites(bookId);
+        }else{
+            GoogleBooksService.addToFavorites(bookId, bookJson);
+        }
+        isFavorite = !isFavorite;
+        setFavoriteLabelText();
     }
 
     @FXML
@@ -81,5 +91,10 @@ public class BookDetailsController {
         Scene scene = bookImage.getScene();
         scene.setRoot(previousScene);
         stage.setScene(scene);
+    }
+
+    private void setFavoriteLabelText() {
+        var favoriteText = isFavorite ? "Unfavorite Book" : "Favorite Book";
+        bookFavorite.setText(favoriteText);
     }
 }

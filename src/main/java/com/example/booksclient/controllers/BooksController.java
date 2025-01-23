@@ -1,8 +1,11 @@
-package com.example.booksclient;
+package com.example.booksclient.controllers;
 
+import com.example.booksclient.BooksApplication;
 import com.example.booksclient.models.domain.Book;
 import com.example.booksclient.models.parsers.BooksParser;
 import com.example.booksclient.services.GoogleBooksService;
+import com.example.booksclient.utils.FavoriteBooksHelper;
+
 import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,25 +44,42 @@ public class BooksController {
 
     @FXML
     public void initialize() {
-        String booksJson = GoogleBooksService.fetchBooks("iOS", 0, 20);
-        List<Book> books = parseBooksJson(booksJson); // Parse JSON string to list of books
-        populateBooksGrid(books);
+        GoogleBooksService.FetchBooksCallback callback = new GoogleBooksService.FetchBooksCallback() {
+            @Override
+            public void onResult(String booksJson){
+                List<Book> books = parseBooksJson(booksJson);
+                populateBooksGrid(books);
+            }
+        };
+        GoogleBooksService.fetchBooksAsync(callback, "iOS", 0, 20);
+        //String booksJson = GoogleBooksService.fetchBooks("iOS", 0, 20);
+        //List<Book> books = parseBooksJson(booksJson);
+        //populateBooksGrid(books);
     }
 
     @FXML
     private void handleToggleFavorites() {
         favoritesOn = !favoritesOn;
+        booksGrid.getChildren().clear();
         if (favoritesOn) {
             toggleFavorites.setText("Favorites On");
+            List<String> favoritesBooks = GoogleBooksService.getFavoriteBooks();
+            String booksJson = FavoriteBooksHelper.combineJsonStrings(favoritesBooks);
+            populateBooksGrid(parseBooksJson(booksJson));
         } else {
             toggleFavorites.setText("Favorites Off");
+            String booksJson = GoogleBooksService.fetchBooks("iOS", 0, 20);
+            List<Book> books = parseBooksJson(booksJson);
+            populateBooksGrid(books);
         }
+
     }
 
     private List<Book> parseBooksJson(String json) {
 
         return BooksParser.parseBooksJson(json);
     }
+
 
     private void populateBooksGrid(List<Book> books) {
         int columns = 2; // Two books per row

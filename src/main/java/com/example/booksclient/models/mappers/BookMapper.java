@@ -2,6 +2,7 @@ package com.example.booksclient.models.mappers;
 
 import com.example.booksclient.models.api.BookResponse;
 import com.example.booksclient.models.domain.Book;
+import com.google.gson.Gson;
 
 public class BookMapper {
     private BookMapper() {
@@ -21,7 +22,10 @@ public class BookMapper {
         book.setImageUrl(bookResponse.getThumbnail());
         book.setThumbnailUrl(bookResponse.getSmallThumbnail());
         book.setBuyUrl(bookResponse.getBuyLink());
-        book.setBookJson(bookResponse.toString());
+
+        Gson gson = new Gson();
+        String bookJson = gson.toJson(bookResponse);
+        book.setBookJson(bookJson);
 
         return book;
     }

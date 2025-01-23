@@ -15,4 +15,6 @@ module com.example.booksclient {
     opens com.example.booksclient.models.api to com.google.gson;
     opens com.example.booksclient.services to com.google.gson, javafx.fxml;
     opens com.example.booksclient.models.parsers to com.google.gson, javafx.fxml;
+    exports com.example.booksclient.controllers;
+    opens com.example.booksclient.controllers to com.google.gson, javafx.fxml;
 }

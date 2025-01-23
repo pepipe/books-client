@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Button?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.booksclient.BookDetailsController"
+      fx:controller="com.example.booksclient.controllers.BookDetailsController"
       fx:id="bookDetails"
       alignment="CENTER"
       spacing="10">

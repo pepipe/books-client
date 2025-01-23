@@ -1,5 +1,6 @@
 package com.example.booksclient;
 
+import com.example.booksclient.controllers.BooksController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
