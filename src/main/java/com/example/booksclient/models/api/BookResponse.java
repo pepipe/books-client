@@ -14,6 +14,7 @@ public class BookResponse {
     }
 
     public String getAuthors(){
+        if(volumeInfo.authors == null) return "";
         return volumeInfo.authors.toString();
     }
 

@@ -12,10 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -40,17 +37,32 @@ public class BooksController {
     @FXML
     private ProgressIndicator loadingIndicator;
 
-    public void setHostServices(HostServices get){
+    private static final int FETCH_BOOKS_MAX_RESULTS = 20;
+
+    public void setHostServices(HostServices get) {
         this.hostServices = get;
     }
+
     private HostServices hostServices;
 
     private boolean favoritesOn = false;
+    private int currentOffset = 0;
+    private boolean isLoading = false;
 
 
     @FXML
     public void initialize() {
         loadBooks();
+
+        booksScroll.vvalueProperty().addListener(
+                (observable, oldValue, newValue) ->
+        {
+            if (newValue.doubleValue() > 0.8 && !isLoading) { // Trigger fetch when 80% scrolled
+                currentOffset += FETCH_BOOKS_MAX_RESULTS;
+                loadBooks();
+            }
+        });
+
     }
 
     @FXML
@@ -66,15 +78,27 @@ public class BooksController {
     }
 
     private void loadBooks() {
+        if (isLoading) return;
+
         Task<String> fetchBooksTask;
         loadingIndicator.setVisible(true);
+        isLoading = true;
 
         if (favoritesOn) {
             toggleFavorites.setText("Favorites On");
             fetchBooksTask = new Task<>() {
                 @Override
-                protected String call() throws Exception {
+                protected String call() {
                     List<String> favoritesBooks = GoogleBooksService.getFavoriteBooks();
+
+                    if (favoritesBooks == null) {
+                        throw new IllegalStateException("Native method returned null for favorite books");
+                    }
+
+                    if (favoritesBooks.isEmpty()) {
+                        System.out.println("Warning: No favorite books found.");
+                    }
+
                     return FavoriteBooksHelper.combineJsonStrings(favoritesBooks);
                 }
             };
@@ -82,24 +106,31 @@ public class BooksController {
             toggleFavorites.setText("Favorites Off");
             fetchBooksTask = new Task<>() {
                 @Override
-                protected String call() throws Exception {
-                    // This runs in a background thread
-                    return GoogleBooksService.fetchBooks("iOS", 0, 20);
+                protected String call() {
+                    String result = GoogleBooksService.fetchBooks("iOS", currentOffset, FETCH_BOOKS_MAX_RESULTS);
+
+                    if (result == null) {
+                        throw new IllegalStateException("Native method fetchBooks returned null");
+                    }
+
+                    return result;
                 }
             };
         }
 
-        fetchBooksTask.setOnSucceeded(event -> {
+        fetchBooksTask.setOnSucceeded(_ -> {
             loadingIndicator.setVisible(false);
             String booksJson = fetchBooksTask.getValue();
             List<Book> books = parseBooksJson(booksJson);
             populateBooksGrid(books);
+            isLoading = false;
         });
 
-        fetchBooksTask.setOnFailed(event -> {
+        fetchBooksTask.setOnFailed(_ -> {
             loadingIndicator.setVisible(false);
             Throwable throwable = fetchBooksTask.getException();
             System.err.println("Error fetching books: " + throwable.getMessage());
+            isLoading = false;
         });
 
         // Run the Task in a separate thread
@@ -109,17 +140,19 @@ public class BooksController {
     }
 
     private void refreshBooksGrid() {
-        if(!favoritesOn) return; //only refresh if we have the favorites filter, if not we want to keep the previous data
+        if (!favoritesOn)
+            return; //only refresh if we have the favorites filter, if not we want to keep the previous data
         booksGrid.getChildren().clear();
         loadBooks();
     }
 
     private void populateBooksGrid(List<Book> books) {
         int columns = 2; // Two books per row
-        int row = 0;
+        int currentItemsCount = booksGrid.getChildren().size();
+        int row = currentItemsCount / columns;
+        int column = currentItemsCount % columns;
 
-        for (int i = 0; i < books.size(); i++) {
-            var book = books.get(i);
+        for (Book book : books) {
             String title = book.getTitle();
             String thumbnailUrl = book.getThumbnailUrl();
 
@@ -132,19 +165,20 @@ public class BooksController {
             thumbnail.setFitHeight(150);
 
             Label bookTitle = new Label(title);
+            bookTitle.setMaxWidth(100); // Limit width to fit under the thumbnail
+            bookTitle.setWrapText(false); // No multiline titles
+            bookTitle.setTextOverrun(OverrunStyle.ELLIPSIS);
 
             bookBox.getChildren().addAll(thumbnail, bookTitle);
 
-            // Wrap in a button or add a click listener
             bookBox.setOnMouseClicked(_ -> openDetailsView(book));
 
-            // Add to grid
-            int column = i % columns;
-            if (i > 0 && column == 0) {
-                row++; // Move to the next row
-            }
-
             booksGrid.add(bookBox, column, row);
+            column++;
+            if (column >= columns) {
+                column = 0;
+                row++;
+            }
         }
     }
 
