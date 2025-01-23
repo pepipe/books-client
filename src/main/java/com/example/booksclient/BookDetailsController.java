@@ -1,6 +1,6 @@
 package com.example.booksclient;
 
-import com.example.booksclient.models.api.BookResponse;
+import com.example.booksclient.models.domain.Book;
 import com.example.booksclient.services.GoogleBooksService;
 import javafx.application.HostServices;
 import javafx.fxml.FXML;
@@ -36,8 +36,8 @@ public class BookDetailsController {
     private Parent previousScene;
     private String buyLink;
 
-    public void setBook(BookResponse book) {
-        bookImage.setImage(new Image(book.getSmallThumbnail()));
+    public void setBook(Book book) {
+        bookImage.setImage(new Image(book.getImageUrl()));
         bookTitle.setText(book.getTitle());
         bookAuthors.setText("Authors: " + book.getAuthors());
         var description = book.getDescription();
@@ -49,7 +49,7 @@ public class BookDetailsController {
         var isFavorite = GoogleBooksService.isFavorite(book.getId());
         var favoriteText = isFavorite ? "Unfavorite Book" : "Favorite Book";
         bookFavorite.setText(favoriteText);
-        buyLink = book.getBuyLink();
+        buyLink = book.getBuyUrl();
         if (buyLink == null || buyLink.isEmpty()) {
             bookBuy.setText("No buy options available");
             bookBuy.setDisable(true);

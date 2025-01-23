@@ -1,7 +1,7 @@
 package com.example.booksclient;
 
-import com.example.booksclient.models.api.BookResponse;
-
+import com.example.booksclient.models.domain.Book;
+import com.example.booksclient.models.parsers.BooksParser;
 import com.example.booksclient.services.GoogleBooksService;
 import javafx.application.HostServices;
 import javafx.fxml.FXML;
@@ -42,7 +42,7 @@ public class BooksController {
     @FXML
     public void initialize() {
         String booksJson = GoogleBooksService.fetchBooks("iOS", 0, 20);
-        List<BookResponse> books = parseBooksJson(booksJson); // Parse JSON string to list of books
+        List<Book> books = parseBooksJson(booksJson); // Parse JSON string to list of books
         populateBooksGrid(books);
     }
 
@@ -56,19 +56,19 @@ public class BooksController {
         }
     }
 
-    private List<BookResponse> parseBooksJson(String json) {
+    private List<Book> parseBooksJson(String json) {
 
         return BooksParser.parseBooksJson(json);
     }
 
-    private void populateBooksGrid(List<BookResponse> books) {
+    private void populateBooksGrid(List<Book> books) {
         int columns = 2; // Two books per row
         int row = 0;
 
         for (int i = 0; i < books.size(); i++) {
-            BookResponse book = books.get(i);
+            var book = books.get(i);
             String title = book.getTitle();
-            String thumbnailUrl = book.getSmallThumbnail();
+            String thumbnailUrl = book.getThumbnailUrl();
 
             // Create UI components
             VBox bookBox = new VBox(5);
@@ -95,7 +95,7 @@ public class BooksController {
         }
     }
 
-    private void openDetailsView(BookResponse book) {
+    private void openDetailsView(Book book) {
         try {
             FXMLLoader loader = new FXMLLoader(BooksApplication.class.getResource("book-details-view.fxml"));
             Parent root = loader.load();
