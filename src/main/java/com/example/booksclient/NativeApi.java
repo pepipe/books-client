@@ -1,9 +1,9 @@
-package com.example.booksclient.services;
+package com.example.booksclient;
 
 import java.util.List;
 
-public class GoogleBooksService {
-    private GoogleBooksService() {
+public class NativeApi {
+    private NativeApi() {
         throw new IllegalStateException("Utility class");
     }
 

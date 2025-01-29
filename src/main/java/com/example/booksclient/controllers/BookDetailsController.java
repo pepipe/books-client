@@ -1,7 +1,7 @@
 package com.example.booksclient.controllers;
 
 import com.example.booksclient.models.domain.Book;
-import com.example.booksclient.services.GoogleBooksService;
+import com.example.booksclient.NativeApi;
 import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -52,7 +52,7 @@ public class BookDetailsController {
         } else {
             bookDescription.setText("No description available");
         }
-        isFavorite = GoogleBooksService.isFavorite(book.getId());
+        isFavorite = NativeApi.isFavorite(book.getId());
         setFavoriteLabelText();
         buyLink = book.getBuyUrl();
         if (buyLink == null || buyLink.isEmpty()) {
@@ -76,9 +76,9 @@ public class BookDetailsController {
     @FXML
     private void favoriteBook() {
         if (isFavorite) {
-            GoogleBooksService.removeFromFavorites(bookId);
+            NativeApi.removeFromFavorites(bookId);
         } else {
-            GoogleBooksService.addToFavorites(bookId, bookJson);
+            NativeApi.addToFavorites(bookId, bookJson);
         }
         isFavorite = !isFavorite;
         setFavoriteLabelText();

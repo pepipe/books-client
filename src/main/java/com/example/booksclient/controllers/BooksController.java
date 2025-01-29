@@ -3,7 +3,7 @@ package com.example.booksclient.controllers;
 import com.example.booksclient.BooksApplication;
 import com.example.booksclient.models.domain.Book;
 import com.example.booksclient.models.parsers.BooksParser;
-import com.example.booksclient.services.GoogleBooksService;
+import com.example.booksclient.NativeApi;
 import com.example.booksclient.utils.FavoriteBooksHelper;
 
 import javafx.application.HostServices;
@@ -89,7 +89,7 @@ public class BooksController {
             fetchBooksTask = new Task<>() {
                 @Override
                 protected String call() {
-                    List<String> favoritesBooks = GoogleBooksService.getFavoriteBooks();
+                    List<String> favoritesBooks = NativeApi.getFavoriteBooks();
 
                     if (favoritesBooks == null) {
                         throw new IllegalStateException("Native method returned null for favorite books");
@@ -107,7 +107,7 @@ public class BooksController {
             fetchBooksTask = new Task<>() {
                 @Override
                 protected String call() {
-                    String result = GoogleBooksService.fetchBooks("iOS", currentOffset, FETCH_BOOKS_MAX_RESULTS);
+                    String result = NativeApi.fetchBooks("iOS", currentOffset, FETCH_BOOKS_MAX_RESULTS);
 
                     if (result == null) {
                         throw new IllegalStateException("Native method fetchBooks returned null");
